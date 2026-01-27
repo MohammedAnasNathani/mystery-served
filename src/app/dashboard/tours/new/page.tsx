@@ -83,13 +83,13 @@ export default function NewTourPage() {
       <div className="flex items-center gap-4 mb-8">
         <Link 
           href="/dashboard/tours" 
-          className="p-2 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors"
+          className="p-2 rounded-lg text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold font-display tracking-tight text-white">Create New Tour</h1>
-          <p className="text-slate-400 text-sm mt-0.5">
+          <h1 className="text-2xl font-bold font-display tracking-tight text-[var(--text)]">Create New Tour</h1>
+          <p className="text-[var(--text-muted)] text-sm mt-0.5">
             Set up a new scavenger hunt experience
           </p>
         </div>
@@ -100,14 +100,14 @@ export default function NewTourPage() {
         
         {/* Basic Info */}
         <div className="glass-panel p-6 rounded-xl">
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-white/5 pb-2">
+          <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-[var(--border-dim)] pb-2">
             <FileText className="w-4 h-4 text-purple-400" />
             Basic Information
           </h2>
 
           <div className="space-y-5">
             <div>
-              <label htmlFor="name" className="block text-xs font-bold text-slate-500 mb-2 ml-1 uppercase tracking-wide">
+              <label htmlFor="name" className="block text-xs font-bold text-[var(--text-muted)] mb-2 ml-1 uppercase tracking-wide">
                 Tour Name <span className="text-purple-400">*</span>
               </label>
               <input
@@ -123,7 +123,7 @@ export default function NewTourPage() {
             </div>
 
             <div>
-              <label htmlFor="description" className="block text-xs font-bold text-slate-500 mb-2 ml-1 uppercase tracking-wide">
+              <label htmlFor="description" className="block text-xs font-bold text-[var(--text-muted)] mb-2 ml-1 uppercase tracking-wide">
                 Description
               </label>
               <textarea
@@ -139,13 +139,13 @@ export default function NewTourPage() {
 
         {/* Location */}
         <div className="glass-panel p-6 rounded-xl">
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-white/5 pb-2">
+          <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-[var(--border-dim)] pb-2">
             <MapPin className="w-4 h-4 text-teal-400" />
             Location
           </h2>
 
           <div>
-            <label htmlFor="city" className="block text-xs font-bold text-slate-500 mb-2 ml-1 uppercase tracking-wide">
+            <label htmlFor="city" className="block text-xs font-bold text-[var(--text-muted)] mb-2 ml-1 uppercase tracking-wide">
               City
             </label>
             <input
@@ -161,7 +161,7 @@ export default function NewTourPage() {
 
         {/* Theme */}
         <div className="glass-panel p-6 rounded-xl">
-          <h2 className="text-sm font-bold text-slate-400 uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-white/5 pb-2">
+          <h2 className="text-sm font-bold text-[var(--text-muted)] uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-[var(--border-dim)] pb-2">
             <Palette className="w-4 h-4 text-amber-400" />
             Theme
           </h2>
@@ -176,8 +176,8 @@ export default function NewTourPage() {
                   key={theme.value}
                   className={`relative flex items-center gap-3 p-4 rounded-lg cursor-pointer transition-all border ${
                     isSelected
-                      ? 'bg-purple-600/10 border-purple-500'
-                      : 'bg-slate-900/40 border-white/5 hover:border-white/10'
+                      ? 'bg-[var(--primary)]/10 border-[var(--primary)]'
+                      : 'bg-[var(--surface-dim)] border-[var(--border-dim)] hover:border-[var(--border-dim)]'
                   }`}
                 >
                   <input
@@ -189,11 +189,11 @@ export default function NewTourPage() {
                     className="sr-only"
                   />
                   
-                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-purple-500 text-white' : 'bg-slate-800 text-slate-400'}`}>
+                  <div className={`p-2 rounded-lg ${isSelected ? 'bg-[var(--primary)] text-[var(--text-on-primary)]' : 'bg-[var(--surface-dim)] text-[var(--text-muted)]'}`}>
                     <Icon className="w-4 h-4" />
                   </div>
                   
-                  <span className={`text-sm font-medium ${isSelected ? 'text-white' : 'text-slate-300'}`}>
+                  <span className={`text-sm font-medium ${isSelected ? 'text-[var(--text)]' : 'text-[var(--text-muted)]'}`}>
                     {theme.label}
                   </span>
                 </label>
@@ -216,8 +216,8 @@ export default function NewTourPage() {
               <div className="absolute left-1 top-1 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
             </div>
             <div>
-              <p className="font-bold text-white">Make Active</p>
-              <p className="text-xs text-slate-500">Active tours are visible to players</p>
+              <p className="font-bold text-[var(--text)]">Make Active</p>
+              <p className="text-xs text-[var(--text-muted)]">Active tours are visible to players</p>
             </div>
           </label>
         </div>
@@ -226,14 +226,14 @@ export default function NewTourPage() {
         <div className="flex items-center justify-end gap-4 pt-4">
           <Link 
             href="/dashboard/tours" 
-            className="px-5 py-2.5 rounded-lg font-bold text-slate-400 hover:text-white transition-colors text-sm"
+            className="px-5 py-2.5 rounded-lg font-bold text-[var(--text-muted)] hover:text-[var(--text)] transition-colors text-sm"
           >
             Cancel
           </Link>
           <button 
             type="submit" 
             disabled={isLoading || !formData.name}
-            className="btn-primary-glow px-6 py-2.5 rounded-lg font-bold text-white shadow-lg shadow-purple-900/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="btn-primary-glow px-6 py-2.5 rounded-lg font-bold text-[var(--text-on-primary)] shadow-lg shadow-purple-900/20 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {isLoading ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />

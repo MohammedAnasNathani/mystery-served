@@ -36,10 +36,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4 bg-[var(--deep-space)]">
       {/* Cinematic Background Elements */}
-      {/* Cinematic Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-[var(--deep-space)] to-[var(--deep-space)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-500/10 via-[var(--deep-space)] to-[var(--deep-space)]" />
       <div className="absolute inset-0 spy-grid opacity-20" />
       
       <motion.div 
@@ -48,7 +47,7 @@ export default function LoginPage() {
         transition={{ duration: 0.8 }}
         className="w-full max-w-md relative z-10"
       >
-        <div className="glass-panel rounded-2xl p-8 md:p-10 backdrop-blur-2xl">
+        <div className="glass-panel rounded-2xl p-8 md:p-10 backdrop-blur-2xl border border-[var(--glass-border)] shadow-2xl">
           {/* Logo Section */}
           <div className="flex flex-col items-center mb-10">
             <motion.div 
@@ -57,7 +56,7 @@ export default function LoginPage() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="relative w-32 h-32 mb-6"
             >
-              <div className="absolute inset-0 bg-purple-500/20 blur-xl rounded-full animate-pulse" />
+              <div className="absolute inset-0 bg-[var(--primary)]/20 blur-xl rounded-full animate-pulse" />
               <Image
                 src="/logo.png"
                 alt="Mystery Served"
@@ -72,7 +71,7 @@ export default function LoginPage() {
               transition={{ delay: 0.4 }}
               className="text-3xl font-bold text-center font-display tracking-tight text-[var(--text)]"
             >
-              Control <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-teal-400">Center</span>
+              Control <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-teal-600 dark:from-purple-400 dark:to-teal-400">Center</span>
             </motion.h1>
             <motion.p 
               initial={{ opacity: 0 }}
@@ -90,7 +89,7 @@ export default function LoginPage() {
               <motion.div 
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2"
+                className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center gap-2"
               >
                 <Shield className="w-4 h-4" />
                 {error}
@@ -99,16 +98,16 @@ export default function LoginPage() {
 
             <div className="space-y-4">
               <div className="group">
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 ml-1">Agent ID</label>
+                <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2 ml-1">Agent ID</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Shield className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-purple-400 transition-colors" />
+                    <Shield className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[var(--primary)] transition-colors" />
                   </div>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="spy-input w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
+                    className="spy-input w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-[var(--primary)]/20 focus:border-[var(--primary)] text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
                     placeholder="agent@mysteryserved.com"
                     required
                   />
@@ -116,16 +115,16 @@ export default function LoginPage() {
               </div>
 
               <div className="group">
-                <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 ml-1">Access Code</label>
+                <label className="block text-xs font-semibold text-[var(--text-muted)] uppercase tracking-wider mb-2 ml-1">Access Code</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-teal-400 transition-colors" />
+                    <Lock className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-[var(--accent)] transition-colors" />
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="spy-input w-full pl-10 pr-12 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
+                    className="spy-input w-full pl-10 pr-12 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-[var(--accent)]/20 focus:border-[var(--accent)] text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
                     placeholder="••••••••"
                     required
                   />
@@ -161,7 +160,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="mt-8 text-center">
             <p className="text-xs text-[var(--text-muted)]">
-              Restricted Area • Security Level 5 • <span className="text-[var(--text-muted)]/70">v1.2.0</span>
+              Restricted Area • Security Level 5 • <span className="opacity-70">v1.2.0</span>
             </p>
           </div>
         </div>

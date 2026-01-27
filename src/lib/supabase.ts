@@ -41,6 +41,8 @@ export interface Stop {
   media_type?: 'image' | 'video' | 'youtube'
   background_image?: string | null
   failures_allowed?: number // Default 3
+  auto_show_hint?: boolean // Default true
+  enable_skip?: boolean // Default true
 
   gps_lat: number | null
   gps_lng: number | null
@@ -69,12 +71,16 @@ class DemoDatabase {
     try {
       const toursData = localStorage.getItem('mystery_served_tours')
       const stopsData = localStorage.getItem('mystery_served_stops')
+      const dataVersion = localStorage.getItem('ms_data_version')
+      const CURRENT_VERSION = '3'
+
       if (toursData) this.tours = JSON.parse(toursData)
       if (stopsData) this.stops = JSON.parse(stopsData)
 
-      // Seed demo data if empty
-      if (this.tours.length === 0) {
+      // Seed demo data if empty OR version mismatch (force update to new passwords/defaults)
+      if (this.tours.length === 0 || dataVersion !== CURRENT_VERSION) {
         this.seedDemoData()
+        localStorage.setItem('ms_data_version', CURRENT_VERSION)
       }
 
       this.initialized = true
@@ -110,13 +116,15 @@ class DemoDatabase {
         name: 'Mystery Served HQ',
         address: '116 Central Ave, St. Petersburg, FL 33701',
         story_text: 'Welcome, Detective Trainee! Your application to the Mystery Served Investigations unit has been received. Before we can process your credentials, you must complete your first assignment.',
-        instructions: 'Ask the server for your "Employment Application" envelope. Inside you\'ll find a case file with hidden clues. Look carefully at the Case File Numbers and the incident report - the code is hiding in plain sight!',
+        instructions: 'Ask the server for your "Employment Application" envelope. Inside you\'ll find a case file with hidden clues. Look carefully at the Case File Numbers - the code is usually a simple 4-digit pin like 1212!',
         menu_items: ['Cuban Sandwich', 'Café con Leche', 'Croquetas'],
         tips: ['The Cuban comes highly recommended!', 'Ask for half to-go for later stops'],
         verification_type: 'text',
-        password: '7286',
+        password: '1212',
         is_info_only: false,
-        failures_allowed: 3,
+        failures_allowed: 2,
+        auto_show_hint: true,
+        enable_skip: true,
         gps_lat: 27.7706,
         gps_lng: -82.6366,
         gps_radius: 50,
@@ -133,13 +141,15 @@ class DemoDatabase {
         name: 'Bodega on Central',
         address: '1120 Central Ave, St. Petersburg, FL 33705',
         story_text: 'You\'ve arrived at the Bodega. The Cuban comes highly recommended here. Once you\'ve ordered, speak to the waitress about your "detective training materials."',
-        instructions: 'Ask the waitress for the silver lockbox. The first clue to open the lock is "electric" - think dance steps! Left, right, up, down... Once open, use the slide ruler inside to decode your next password.',
+        instructions: 'Ask the waitress for the silver lockbox. The first clue is a classic detective word... maybe "mystery"? Once open, use the slide ruler inside to decode your next password.',
         menu_items: ['Cuban Sandwich', 'Media Noche', 'Ropa Vieja'],
         tips: ['Request half wrapped to-go', 'The dance is the Electric Slide!'],
         verification_type: 'text',
-        password: 'SLEUTH',
+        password: 'mystery',
         is_info_only: false,
-        failures_allowed: 3,
+        failures_allowed: 2,
+        auto_show_hint: true,
+        enable_skip: true,
         gps_lat: 27.7710,
         gps_lng: -82.6500,
         gps_radius: 50,
@@ -162,7 +172,9 @@ class DemoDatabase {
         verification_type: 'text',
         password: 'MAGNIFY',
         is_info_only: false,
-        failures_allowed: 3,
+        failures_allowed: 2,
+        auto_show_hint: true,
+        enable_skip: true,
         gps_lat: 27.7712,
         gps_lng: -82.6550,
         gps_radius: 50,
@@ -183,6 +195,10 @@ class DemoDatabase {
         tips: ['Chicken with black beans and white rice is the local favorite!', 'Don\'t forget the Celsius drink!'],
         verification_type: 'text',
         password: '4521',
+        is_info_only: false,
+        failures_allowed: 2,
+        auto_show_hint: true,
+        enable_skip: true,
         gps_lat: 27.7715,
         gps_lng: -82.6600,
         gps_radius: 50,
@@ -203,6 +219,8 @@ class DemoDatabase {
         tips: ['Work together on this one!', 'The blacklight reveals hidden surprises!'],
         verification_type: 'text',
         password: 'AGENT',
+        auto_show_hint: true,
+        enable_skip: true,
         gps_lat: 27.7720,
         gps_lng: -82.6650,
         gps_radius: 50,
@@ -354,6 +372,26 @@ class DemoDatabase {
     this.tours = []
     this.stops = []
     this.seedDemoData()
+  }
+
+  // Export/Import for manual syncing between devices
+  exportData(): string {
+    return btoa(JSON.stringify({ tours: this.tours, stops: this.stops }))
+  }
+
+  importData(data: string): boolean {
+    try {
+      const parsed = JSON.parse(atob(data))
+      if (parsed.tours && parsed.stops) {
+        this.tours = parsed.tours
+        this.stops = parsed.stops
+        this.saveToStorage()
+        return true
+      }
+      return false
+    } catch {
+      return false
+    }
   }
 }
 

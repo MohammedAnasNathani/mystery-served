@@ -9,9 +9,13 @@ import {
   LayoutDashboard, 
   Map, 
   LogOut,
-  Menu
+  Menu,
+  RefreshCw,
+  Trash2
 } from 'lucide-react'
 import { ThemeToggle } from "@/components/ThemeToggle"
+import { toast } from 'sonner'
+import { demoDB } from '@/lib/supabase'
 
 interface AuthState {
   email: string
@@ -106,7 +110,10 @@ export default function DashboardLayout({
                 {isActive && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute inset-0 bg-[var(--primary)] opacity-10 rounded-lg border-l-2 border-[var(--primary)]"
+                    className="absolute inset-0 bg-[var(--primary)]/10 dark:bg-[var(--primary)]/10 rounded-lg border-l-2 border-[var(--primary)]"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
                   />
                 )}
                 <div className={`relative flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
@@ -131,13 +138,40 @@ export default function DashboardLayout({
               <p className="text-[10px] text-[var(--text-muted)]">Admin</p>
             </div>
             <ThemeToggle />
-            <button
-              onClick={handleLogout}
-              className="p-2 text-slate-400 hover:text-red-400 transition-colors"
-              title="Logout"
-            >
-              <LogOut className="w-4 h-4" />
-            </button>
+            <div className="flex items-center gap-1">
+              <button 
+                onClick={async () => {
+                  const data = demoDB.exportData()
+                  await navigator.clipboard.writeText(data)
+                  toast.success("Sync Code Copied!", {
+                    description: "Pasted it on your phone's 'Sync from Computer' button."
+                  })
+                }}
+                className="p-2 text-slate-400 hover:text-[var(--primary)] transition-colors"
+                title="Sync to Phone"
+              >
+                <RefreshCw className="w-4 h-4" />
+              </button>
+              <button 
+                onClick={async () => {
+                  if (confirm("⚠️ FACTORY RESET?\n\nThis will delete ALL tours you created and reset to the default Sherlock demo.\n\nOnly do this if you are stuck or want to see the latest updates (like the 1212 passwords).")) {
+                    await demoDB.resetToDemo()
+                    window.location.reload()
+                  }
+                }}
+                className="p-2 text-slate-400 hover:text-orange-400 transition-colors"
+                title="Reset to Factory Defaults"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+              <button
+                onClick={handleLogout}
+                className="p-2 text-slate-400 hover:text-red-400 transition-colors"
+                title="Logout"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
+            </div>
           </div>
         </div>
       </motion.aside>
