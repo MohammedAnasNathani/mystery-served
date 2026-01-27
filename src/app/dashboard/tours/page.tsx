@@ -98,16 +98,16 @@ export default function ToursPage() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-1">
+          <h1 className="text-3xl font-bold font-display tracking-tight text-[var(--text)] mb-1">
             Tours
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-[var(--text-muted)] text-sm">
             Manage your scavenger hunt experiences
           </p>
         </div>
         <Link 
           href="/dashboard/tours/new"
-          className="btn-primary-glow px-5 py-2.5 rounded-lg font-bold text-white flex items-center gap-2 shadow-lg shadow-purple-900/10 text-sm"
+          className="btn-primary-glow px-5 py-2.5 rounded-lg font-bold text-[var(--text-on-primary)] flex items-center gap-2 shadow-lg shadow-purple-900/10 text-sm"
         >
           <Plus className="w-4 h-4" />
           Create Tour
@@ -122,7 +122,7 @@ export default function ToursPage() {
           placeholder="Search tours..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="spy-input w-full pl-10 pr-4 py-2.5 rounded-lg text-sm text-white placeholder-slate-600 transition-all font-medium"
+          className="spy-input w-full pl-10 pr-4 py-2.5 rounded-lg text-sm text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
         />
       </div>
 
@@ -130,7 +130,7 @@ export default function ToursPage() {
       {isLoading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((n) => (
-            <div key={n} className="h-24 rounded-xl bg-slate-900/20 animate-pulse border border-white/5" />
+            <div key={n} className="h-24 rounded-xl bg-[var(--surface-dim)] animate-pulse border border-[var(--border-dim)]" />
           ))}
         </div>
       ) : filteredTours.length === 0 ? (
@@ -141,7 +141,7 @@ export default function ToursPage() {
           <h3 className="text-base font-bold text-white mb-1">
             {searchQuery ? 'No tours found' : 'No tours yet'}
           </h3>
-          <p className="text-slate-500 mb-5 text-sm">
+          <p className="text-[var(--text-muted)] mb-5 text-sm">
             {searchQuery 
               ? 'Try a different search term.' 
               : 'Create your first scavenger hunt tour.'}
@@ -166,14 +166,14 @@ export default function ToursPage() {
               variants={item}
               className="glass-card rounded-xl p-[1px] group"
             >
-              <div className="bg-[#0B101B]/80 rounded-[10px] p-4 flex items-center justify-between backdrop-blur-sm h-full hover:bg-white/[0.03] transition-colors relative overflow-hidden">
+              <div className="glass-card rounded-[10px] p-4 flex items-center justify-between backdrop-blur-sm h-full hover:bg-[var(--surface-hover)] transition-colors relative overflow-hidden">
                 <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-purple-500 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 
                 <div className="flex-1 min-w-0 pr-4 pl-2">
                   <div className="flex items-center gap-3 mb-1">
                     <Link 
                       href={`/dashboard/tours/${tour.id}`}
-                      className="text-base font-bold text-slate-100 hover:text-white transition-colors tracking-tight truncate font-display"
+                      className="text-base font-bold text-[var(--text)] hover:text-[var(--primary)] transition-colors tracking-tight truncate font-display"
                     >
                       {tour.name}
                     </Link>
@@ -185,20 +185,20 @@ export default function ToursPage() {
                       {tour.is_active ? 'Active' : 'Draft'}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 mb-2 line-clamp-1 max-w-xl font-medium">
+                  <p className="text-xs text-[var(--text-muted)] mb-2 line-clamp-1 max-w-xl font-medium">
                     {tour.description || 'No description'}
                   </p>
-                  <div className="flex items-center gap-4 text-[11px] text-slate-500 font-medium">
+                  <div className="flex items-center gap-4 text-[11px] text-[var(--text-muted)] font-medium">
                     <span className="flex items-center gap-1.5">
-                      <MapPin className="w-3 h-3 text-slate-600" />
+                      <MapPin className="w-3 h-3 text-[var(--text-muted)]" />
                       {tour.city}
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Layers className="w-3 h-3 text-slate-600" />
+                      <Layers className="w-3 h-3 text-[var(--text-muted)]" />
                       {tourStops[tour.id]?.length || 0} stops
                     </span>
                     <span className="flex items-center gap-1.5">
-                      <Clock className="w-3 h-3 text-slate-600" />
+                      <Clock className="w-3 h-3 text-[var(--text-muted)]" />
                       {new Date(tour.updated_at).toLocaleDateString()}
                     </span>
                   </div>
@@ -208,7 +208,7 @@ export default function ToursPage() {
                   <button
                     onClick={() => setActiveMenu(activeMenu === tour.id ? null : tour.id)}
                     className={`p-2 rounded-lg transition-colors ${
-                      activeMenu === tour.id ? 'bg-white/10 text-white' : 'text-slate-500 hover:text-white hover:bg-white/5'
+                      activeMenu === tour.id ? 'bg-[var(--surface-hover)] text-[var(--text)]' : 'text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)]'
                     }`}
                   >
                     <MoreVertical className="w-4 h-4" />
@@ -220,12 +220,12 @@ export default function ToursPage() {
                         initial={{ opacity: 0, scale: 0.95, y: 5 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
                         exit={{ opacity: 0, scale: 0.95, y: 5 }}
-                        className="absolute right-0 top-10 w-44 glass-panel rounded-lg overflow-hidden z-20 shadow-xl shadow-black/80 border border-white/10"
+                        className="absolute right-0 top-10 w-44 glass-panel rounded-lg overflow-hidden z-20 shadow-xl shadow-black/20 border border-[var(--border-dim)]"
                       >
                         <div className="p-1">
                           <Link
                             href={`/dashboard/tours/${tour.id}`}
-                            className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-bold text-slate-300 hover:bg-white/5 hover:text-white w-full transition-colors text-left"
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-bold text-[var(--text-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--text)] w-full transition-colors text-left"
                             onClick={() => setActiveMenu(null)}
                           >
                             <Edit className="w-3.5 h-3.5" />
@@ -233,12 +233,12 @@ export default function ToursPage() {
                           </Link>
                           <button
                             onClick={() => handleDuplicate(tour)}
-                            className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-bold text-slate-300 hover:bg-white/5 hover:text-white w-full transition-colors text-left"
+                            className="flex items-center gap-2 px-3 py-2 rounded-md text-xs font-bold text-[var(--text-muted)] hover:bg-[var(--surface-hover)] hover:text-[var(--text)] w-full transition-colors text-left"
                           >
                             <Copy className="w-3.5 h-3.5" />
                             Duplicate
                           </button>
-                          <div className="h-[1px] bg-white/5 my-1" />
+                          <div className="h-[1px] bg-[var(--border-dim)] my-1" />
                           <button
                             onClick={() => {
                               setDeleteModal(tour)
@@ -280,14 +280,14 @@ export default function ToursPage() {
               <div className="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center mb-4 text-red-400 mx-auto border border-red-500/20">
                 <Trash2 className="w-5 h-5" />
               </div>
-              <h2 className="text-lg font-bold text-white text-center mb-1 font-display">Delete Tour</h2>
-              <p className="text-slate-400 text-center mb-6 text-xs leading-relaxed max-w-[250px] mx-auto font-medium">
-                Are you sure you want to delete <span className="text-white">"{deleteModal.name}"</span>? This cannot be undone.
+              <h2 className="text-lg font-bold text-[var(--text)] text-center mb-1 font-display">Delete Tour</h2>
+              <p className="text-[var(--text-muted)] text-center mb-6 text-xs leading-relaxed max-w-[250px] mx-auto font-medium">
+                Are you sure you want to delete <span className="text-[var(--text)]">"{deleteModal.name}"</span>? This cannot be undone.
               </p>
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   onClick={() => setDeleteModal(null)}
-                  className="px-4 py-2 rounded-lg border border-white/10 text-slate-300 hover:text-white hover:bg-white/5 transition-colors font-bold text-xs"
+                  className="px-4 py-2 rounded-lg border border-[var(--border-dim)] text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--surface-hover)] transition-colors font-bold text-xs"
                 >
                   Cancel
                 </button>

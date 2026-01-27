@@ -14,10 +14,26 @@
 
   --text: #F1F5F9;
   --text-muted: #64748B;
+  --text-on-primary: #FFFFFF;
 
+  /* Glass & Surface Variables */
   --glass-surface: rgba(11, 16, 27, 0.6);
   --glass-border: rgba(255, 255, 255, 0.06);
   --glass-shine: rgba(255, 255, 255, 0.02);
+
+  --surface-dim: rgba(255, 255, 255, 0.03);
+  --surface-hover: rgba(255, 255, 255, 0.08);
+  --border-dim: rgba(255, 255, 255, 0.06);
+
+  --input-bg: rgba(2, 4, 10, 0.6);
+  --input-border: rgba(255, 255, 255, 0.1);
+  --input-focus-ring: rgba(124, 58, 237, 0.1);
+
+  --card-gradient-start: rgba(30, 41, 59, 0.4);
+  --card-gradient-end: rgba(15, 23, 42, 0.4);
+
+  --grid-color: rgba(255, 255, 255, 0.03);
+  --grid-mask: radial-gradient(circle at center, black 30%, transparent 80%);
 }
 
 [data-theme="light"] {
@@ -25,28 +41,50 @@
   /* Slate 50 */
   --midnight: #FFFFFF;
 
-  --primary: #6D28D9;
-  /* Darker purple for contrast on white */
-  --primary-dim: #5B21B6;
+  --primary: #7C3AED;
+  --primary-dim: #6D28D9;
 
   --accent: #0D9488;
   --accent-dim: #0F766E;
 
   --text: #0F172A;
   /* Slate 900 */
-  --text-muted: #475569;
-  /* Slate 600 */
+  --text-muted: #64748B;
+  /* Slate 500 */
+  --text-on-primary: #FFFFFF;
 
-  --glass-surface: rgba(255, 255, 255, 0.8);
-  --glass-border: rgba(0, 0, 0, 0.1);
-  --glass-shine: rgba(0, 0, 0, 0.05);
+  /* Light Mode Glass & Surfaces */
+  --glass-surface: rgba(255, 255, 255, 0.75);
+  --glass-border: rgba(226, 232, 240, 0.8);
+  /* Slate 200 */
+  --glass-shine: rgba(255, 255, 255, 0.4);
 
-  /* Override glass classes for light mode explicitly if needed, but variables usually handle it */
+  --surface-dim: rgba(241, 245, 249, 0.7);
+  /* Slate 100 */
+  --surface-hover: rgba(226, 232, 240, 0.8);
+  /* Slate 200 */
+  --border-dim: rgba(226, 232, 240, 1);
+  /* Slate 200 */
+
+  --input-bg: rgba(255, 255, 255, 0.8);
+  --input-border: rgba(203, 213, 225, 0.8);
+  /* Slate 300 */
+  --input-focus-ring: rgba(124, 58, 237, 0.15);
+
+  --card-gradient-start: rgba(255, 255, 255, 0.9);
+  --card-gradient-end: rgba(248, 250, 252, 0.9);
+
+  --grid-color: rgba(15, 23, 42, 0.04);
+  --grid-mask: radial-gradient(circle at center, black 40%, transparent 80%);
 }
 
 @theme {
   --font-display: var(--font-outfit), system-ui, sans-serif;
   --font-body: var(--font-inter), system-ui, sans-serif;
+
+  /* Map Tailwind colors to CSS variables where useful */
+  --color-surface-dim: var(--surface-dim);
+  --color-border-dim: var(--border-dim);
 }
 
 body {
@@ -57,15 +95,17 @@ body {
   font-feature-settings: "cv11", "ss01";
   /* OpenType features for cleaner text */
   -webkit-font-smoothing: antialiased;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Technical Grid - Subtle, not noisy */
 .spy-grid {
   background-size: 40px 40px;
   background-image:
-    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+    linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+  mask-image: var(--grid-mask);
+  pointer-events: none;
 }
 
 /* Glassmorphism - Matte Finish (More Professional) */
@@ -74,49 +114,51 @@ body {
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 8px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  /* Softer shadow */
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
+/* Card Styling */
 .glass-card {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+  background: linear-gradient(180deg, var(--card-gradient-start) 0%, var(--card-gradient-end) 100%);
   backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
   transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .glass-card:hover {
-  background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
-  border-color: rgba(124, 58, 237, 0.3);
-  /* Subtle primary hint */
   transform: translateY(-1px);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 /* Inputs - High Contrast & Tactile */
 .spy-input {
-  background: rgba(2, 4, 10, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   color: var(--text);
   transition: all 0.15s ease-out;
   font-feature-settings: "tnum";
-  /* Tabular numbers */
 }
 
 .spy-input:focus {
-  background: rgba(2, 4, 10, 0.9);
+  background: var(--input-bg);
+  /* Keep transparent/colored */
   border-color: var(--primary);
-  box-shadow: 0 0 0 1px var(--primary), 0 0 0 4px rgba(124, 58, 237, 0.1);
-  /* Crisp focus ring */
+  box-shadow: 0 0 0 1px var(--primary), 0 0 0 4px var(--input-focus-ring);
   outline: none;
 }
 
 .spy-input::placeholder {
-  color: #475569;
+  color: var(--text-muted);
 }
 
 /* Buttons - Refined Glow */
 .btn-primary-glow {
-  background: #7C3AED;
+  background: var(--primary);
+  color: var(--text-on-primary);
   position: relative;
   overflow: hidden;
   transition: all 0.2s ease;
@@ -124,7 +166,7 @@ body {
 }
 
 .btn-primary-glow:hover {
-  background: #6D28D9;
+  background: var(--primary-dim);
   box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
   transform: translateY(-1px);
 }
@@ -144,10 +186,10 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: var(--surface-dim);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #475569;
+  background: var(--text-muted);
 }

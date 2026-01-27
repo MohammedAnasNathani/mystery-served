@@ -70,12 +70,12 @@ export default function DashboardLayout({
         initial={{ x: -280 }}
         animate={{ x: 0 }}
         transition={{ type: "spring", stiffness: 100, damping: 20 }}
-        className={`fixed left-0 top-0 h-full w-[260px] glass-panel z-50 flex flex-col border-r border-white/5 transition-transform duration-300 ${
+        className={`fixed left-0 top-0 h-full w-[260px] glass-panel z-50 flex flex-col border-r border-[var(--border-dim)] transition-transform duration-300 ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Logo */}
-        <div className="p-5 border-b border-white/5">
+        <div className="p-5 border-b border-[var(--border-dim)]">
           <Link href="/dashboard" className="flex items-center gap-3">
             <div className="relative w-10 h-10">
               <Image
@@ -106,11 +106,11 @@ export default function DashboardLayout({
                 {isActive && (
                   <motion.div
                     layoutId="activeNav"
-                    className="absolute inset-0 bg-purple-600/10 rounded-lg border-l-2 border-purple-500"
+                    className="absolute inset-0 bg-[var(--primary)] opacity-10 rounded-lg border-l-2 border-[var(--primary)]"
                   />
                 )}
                 <div className={`relative flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all ${
-                  isActive ? 'text-[var(--primary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)] group-hover:bg-white/5'
+                  isActive ? 'text-[var(--primary)]' : 'text-[var(--text-muted)] group-hover:text-[var(--text)] group-hover:bg-[var(--surface-hover)]'
                 }`}>
                   <item.icon className="w-5 h-5" />
                   <span className="font-medium text-sm">{item.label}</span>
@@ -121,8 +121,8 @@ export default function DashboardLayout({
         </nav>
 
         {/* User Profile */}
-        <div className="p-4 border-t border-white/5">
-          <div className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+        <div className="p-4 border-t border-[var(--border-dim)]">
+          <div className="flex items-center gap-3 p-3 rounded-xl bg-[var(--surface-dim)] border border-[var(--border-dim)]">
             <div className="w-9 h-9 rounded-full bg-gradient-to-br from-purple-600 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-lg">
               {auth.email.charAt(0).toUpperCase()}
             </div>
@@ -145,7 +145,7 @@ export default function DashboardLayout({
       {/* Main Content */}
       <main className="flex-1 lg:ml-[260px] relative z-10 w-full">
         {/* Mobile Header */}
-        <div className="lg:hidden h-14 border-b border-white/10 flex items-center justify-between px-4 glass-panel sticky top-0 z-40">
+        <div className="lg:hidden h-14 border-b border-[var(--border-dim)] flex items-center justify-between px-4 glass-panel sticky top-0 z-40">
           <button 
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="p-2 text-[var(--text)]"

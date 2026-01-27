@@ -87,16 +87,16 @@ export default function DashboardPage() {
       {/* Welcome Header */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-1">
+          <h1 className="text-3xl font-bold font-display tracking-tight text-[var(--text)] mb-1">
             Dashboard
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-[var(--text-muted)] text-sm">
             Welcome back! Here's an overview of your tours.
           </p>
         </div>
         <Link 
           href="/dashboard/tours/new"
-          className="btn-primary-glow px-5 py-2.5 rounded-lg font-bold text-white flex items-center gap-2 shadow-lg shadow-purple-900/10 text-sm"
+          className="btn-primary-glow px-5 py-2.5 rounded-lg font-bold text-[var(--text-on-primary)] flex items-center gap-2 shadow-lg shadow-purple-900/10 text-sm"
         >
           <Plus className="w-4 h-4" />
           Create New Tour
@@ -114,12 +114,12 @@ export default function DashboardPage() {
             <div className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform duration-500`} />
             <div className="relative z-10">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${stat.color} p-[1px] mb-3 shadow-lg shadow-black/20`}>
-                <div className="w-full h-full rounded-[7px] bg-slate-900/80 backdrop-blur flex items-center justify-center">
+                <div className="w-full h-full rounded-[7px] bg-[var(--surface-dim)] backdrop-blur flex items-center justify-center">
                   <stat.icon className="w-5 h-5 text-white" />
                 </div>
               </div>
-              <h3 className="text-2xl font-bold text-white mb-0.5 font-display tracking-tight">{stat.value}</h3>
-              <p className="text-xs font-medium text-slate-400 uppercase tracking-wider">{stat.label}</p>
+              <h3 className="text-2xl font-bold text-[var(--text)] mb-0.5 font-display tracking-tight">{stat.value}</h3>
+              <p className="text-xs font-medium text-[var(--text-muted)] uppercase tracking-wider">{stat.label}</p>
             </div>
           </motion.div>
         ))}
@@ -128,7 +128,7 @@ export default function DashboardPage() {
       {/* Recent Tours */}
       <motion.div variants={item} className="space-y-4">
         <div className="flex items-center justify-between">
-          <h2 className="text-lg font-bold text-white flex items-center gap-2">
+          <h2 className="text-lg font-bold text-[var(--text)] flex items-center gap-2">
             <Clock className="w-5 h-5 text-purple-400" />
             Recent Tours
           </h2>
@@ -140,19 +140,19 @@ export default function DashboardPage() {
         {isLoading ? (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[1, 2, 3].map((n) => (
-              <div key={n} className="h-40 rounded-xl bg-slate-900/30 animate-pulse border border-white/5" />
+              <div key={n} className="h-40 rounded-xl bg-[var(--surface-dim)] animate-pulse border border-[var(--border-dim)]" />
             ))}
           </div>
         ) : tours.length === 0 ? (
-          <div className="glass-panel rounded-xl p-10 text-center border-dashed border-slate-800">
-            <div className="w-14 h-14 rounded-full bg-slate-900/50 flex items-center justify-center mx-auto mb-4 border border-white/5">
-              <Map className="w-7 h-7 text-slate-600" />
+          <div className="glass-panel rounded-xl p-10 text-center border-dashed border-[var(--border-dim)]">
+            <div className="w-14 h-14 rounded-full bg-[var(--surface-dim)] flex items-center justify-center mx-auto mb-4 border border-[var(--border-dim)]">
+              <Map className="w-7 h-7 text-[var(--text-muted)]" />
             </div>
-            <h3 className="text-base font-bold text-white mb-1">No Tours Yet</h3>
-            <p className="text-slate-500 mb-5 text-sm max-w-xs mx-auto">
+            <h3 className="text-base font-bold text-[var(--text)] mb-1">No Tours Yet</h3>
+            <p className="text-[var(--text-muted)] mb-5 text-sm max-w-xs mx-auto">
               Create your first scavenger hunt tour to get started.
             </p>
-            <Link href="/dashboard/tours/new" className="btn-primary-glow px-5 py-2 rounded-lg font-bold text-white inline-flex items-center gap-2 text-sm">
+            <Link href="/dashboard/tours/new" className="btn-primary-glow px-5 py-2 rounded-lg font-bold text-[var(--text-on-primary)] inline-flex items-center gap-2 text-sm">
               <Plus className="w-4 h-4" />
               Create Tour
             </Link>
@@ -175,19 +175,19 @@ export default function DashboardPage() {
                   }`}>
                     {tour.is_active ? 'Active' : 'Draft'}
                   </div>
-                  <div className="w-7 h-7 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
-                    <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-purple-400" />
+                  <div className="w-7 h-7 rounded-full bg-[var(--surface-hover)] flex items-center justify-center group-hover:bg-purple-500/20 transition-colors">
+                    <ArrowUpRight className="w-3.5 h-3.5 text-[var(--text-muted)] group-hover:text-purple-400" />
                   </div>
                 </div>
 
-                <h3 className="text-base font-bold text-white mb-1 line-clamp-1 group-hover:text-purple-400 transition-colors">
+                <h3 className="text-base font-bold text-[var(--text)] mb-1 line-clamp-1 group-hover:text-purple-400 transition-colors">
                   {tour.name}
                 </h3>
-                <p className="text-xs text-slate-500 mb-4 line-clamp-2 h-8">
+                <p className="text-xs text-[var(--text-muted)] mb-4 line-clamp-2 h-8">
                   {tour.description || 'No description provided.'}
                 </p>
 
-                <div className="flex items-center justify-between text-[11px] text-slate-500 relative z-10 border-t border-white/5 pt-3">
+                <div className="flex items-center justify-between text-[11px] text-[var(--text-muted)] relative z-10 border-t border-[var(--border-dim)] pt-3">
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3 h-3" />
                     {tour.city}

@@ -47,7 +47,7 @@ export default function GpsPicker({ lat, lng, radius, onChange }: GpsPickerProps
   const position: [number, number] = lat && lng ? [lat, lng] : defaultCenter
 
   return (
-    <div className="h-[300px] w-full rounded-lg overflow-hidden border border-white/10 z-0 relative">
+    <div className="h-[300px] w-full rounded-lg overflow-hidden border border-[var(--border-dim)] z-0 relative">
       <MapContainer 
         center={position} 
         zoom={13} 

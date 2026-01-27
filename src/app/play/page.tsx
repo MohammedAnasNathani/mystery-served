@@ -37,14 +37,14 @@ export default function PlayerLobby() {
         <div className="relative w-16 h-16 mx-auto mb-4">
            <Image src="/logo.png" alt="Mystery Served" fill className="object-contain" />
         </div>
-        <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-2">Available Missions</h1>
-        <p className="text-slate-400 text-sm">Select a tour to begin your investigation.</p>
+        <h1 className="text-3xl font-bold font-display tracking-tight text-[var(--text)] mb-2">Available Missions</h1>
+        <p className="text-[var(--text-muted)] text-sm">Select a tour to begin your investigation.</p>
       </header>
 
       <div className="flex-1 space-y-4">
         {tours.length === 0 ? (
-          <div className="text-center p-8 bg-white/5 rounded-xl border border-white/5">
-             <p className="text-slate-400">No active missions available.</p>
+          <div className="text-center p-8 bg-[var(--surface-dim)] rounded-xl border border-[var(--border-dim)]">
+             <p className="text-[var(--text-muted)]">No active missions available.</p>
           </div>
         ) : (
           tours.map((tour, index) => (
@@ -55,25 +55,25 @@ export default function PlayerLobby() {
               transition={{ delay: index * 0.1 }}
             >
               <Link href={`/play/${tour.id}`} className="block group">
-                <div className="glass-card p-5 rounded-xl hover:bg-white/5 transition-all relative overflow-hidden group-hover:ring-1 ring-purple-500/50">
+                <div className="glass-card p-5 rounded-xl hover:bg-[var(--surface-hover)] transition-all relative overflow-hidden group-hover:ring-1 ring-purple-500/50">
                    <div className="flex items-start justify-between gap-4 relative z-10">
                       <div>
                         <div className="flex items-center gap-2 mb-2">
                            <span className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-purple-500/20 text-purple-300 border border-purple-500/20">
                               {tour.theme || 'Mystery'}
                            </span>
-                           <span className="text-[10px] text-slate-500 font-medium uppercase tracking-wider flex items-center gap-1">
+                           <span className="text-[10px] text-[var(--text-muted)] font-medium uppercase tracking-wider flex items-center gap-1">
                               <Map className="w-3 h-3" /> {tour.city}
                            </span>
                         </div>
-                        <h3 className="text-xl font-bold text-white mb-1 leading-tight group-hover:text-purple-400 transition-colors">
+                        <h3 className="text-xl font-bold text-[var(--text)] mb-1 leading-tight group-hover:text-purple-400 transition-colors">
                           {tour.name}
                         </h3>
-                        <p className="text-sm text-slate-400 line-clamp-2">
+                        <p className="text-sm text-[var(--text-muted)] line-clamp-2">
                           {tour.description}
                         </p>
                       </div>
-                      <div className="bg-white/10 p-2.5 rounded-full text-white group-hover:bg-purple-600 transition-colors">
+                      <div className="bg-[var(--surface-hover)] p-2.5 rounded-full text-[var(--text)] group-hover:bg-purple-600 group-hover:text-white transition-colors">
                          <ChevronRight className="w-5 h-5" />
                       </div>
                    </div>
@@ -88,7 +88,7 @@ export default function PlayerLobby() {
       </div>
 
       <footer className="mt-8 text-center pb-8">
-        <p className="text-xs text-slate-600">
+        <p className="text-xs text-[var(--text-muted)]">
            &copy; {new Date().getFullYear()} Mystery Served.
         </p>
       </footer>

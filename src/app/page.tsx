@@ -38,8 +38,9 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden p-4">
       {/* Cinematic Background Elements */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-[#050511] to-[#050511]" />
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+      {/* Cinematic Background Elements */}
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-purple-900/20 via-[var(--deep-space)] to-[var(--deep-space)]" />
+      <div className="absolute inset-0 spy-grid opacity-20" />
       
       <motion.div 
         initial={{ opacity: 0, y: 20 }}
@@ -69,7 +70,7 @@ export default function LoginPage() {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}
-              className="text-3xl font-bold text-center font-display tracking-tight text-white"
+              className="text-3xl font-bold text-center font-display tracking-tight text-[var(--text)]"
             >
               Control <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-teal-400">Center</span>
             </motion.h1>
@@ -77,7 +78,7 @@ export default function LoginPage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.5 }}
-              className="text-sm text-slate-400 mt-2 font-medium tracking-wide uppercase"
+              className="text-sm text-[var(--text-muted)] mt-2 font-medium tracking-wide uppercase"
             >
               Authorized Personnel Only
             </motion.p>
@@ -101,13 +102,13 @@ export default function LoginPage() {
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 ml-1">Agent ID</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Shield className="h-5 w-5 text-slate-500 group-focus-within:text-purple-400 transition-colors" />
+                    <Shield className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-purple-400 transition-colors" />
                   </div>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="spy-input w-full pl-10 pr-4 py-3 rounded-xl bg-slate-900/50 border border-slate-700 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-white placeholder-slate-600 transition-all font-medium"
+                    className="spy-input w-full pl-10 pr-4 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
                     placeholder="agent@mysteryserved.com"
                     required
                   />
@@ -118,20 +119,20 @@ export default function LoginPage() {
                 <label className="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2 ml-1">Access Code</label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-slate-500 group-focus-within:text-teal-400 transition-colors" />
+                    <Lock className="h-5 w-5 text-[var(--text-muted)] group-focus-within:text-teal-400 transition-colors" />
                   </div>
                   <input
                     type={showPassword ? 'text' : 'password'}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="spy-input w-full pl-10 pr-12 py-3 rounded-xl bg-slate-900/50 border border-slate-700 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-white placeholder-slate-600 transition-all font-medium"
+                    className="spy-input w-full pl-10 pr-12 py-3 rounded-xl bg-[var(--input-bg)] border border-[var(--input-border)] focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 text-[var(--text)] placeholder:text-[var(--text-muted)] transition-all font-medium"
                     placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-slate-500 hover:text-white transition-colors"
+                    className="absolute inset-y-0 right-0 pr-3 flex items-center text-[var(--text-muted)] hover:text-[var(--text)] transition-colors"
                   >
                     {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
                   </button>
@@ -144,7 +145,7 @@ export default function LoginPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full btn-primary-glow py-3.5 rounded-xl font-bold text-white shadow-lg shadow-purple-900/20 flex items-center justify-center gap-2 mt-8 group"
+              className="w-full btn-primary-glow py-3.5 rounded-xl font-bold text-[var(--text-on-primary)] shadow-lg shadow-purple-900/20 flex items-center justify-center gap-2 mt-8 group"
             >
               {isLoading ? (
                 <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -159,8 +160,8 @@ export default function LoginPage() {
 
           {/* Footer */}
           <div className="mt-8 text-center">
-            <p className="text-xs text-slate-600">
-              Restricted Area • Security Level 5 • <span className="text-slate-500">v1.2.0</span>
+            <p className="text-xs text-[var(--text-muted)]">
+              Restricted Area • Security Level 5 • <span className="text-[var(--text-muted)]/70">v1.2.0</span>
             </p>
           </div>
         </div>
@@ -172,7 +173,7 @@ export default function LoginPage() {
           transition={{ delay: 1 }}
           className="mt-6 text-center"
         >
-          <div className="inline-block px-4 py-2 rounded-full bg-slate-800/50 border border-slate-700/50 text-[10px] text-slate-500 backdrop-blur-sm">
+          <div className="inline-block px-4 py-2 rounded-full bg-[var(--surface-dim)] border border-[var(--border-dim)] text-[10px] text-[var(--text-muted)] backdrop-blur-sm">
             Demo: admin@mysteryserved.com / agent007
           </div>
         </motion.div>
