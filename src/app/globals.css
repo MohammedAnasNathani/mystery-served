@@ -1,26 +1,153 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Mystery Served Premium Palette - Professional Deep Space */
+  --deep-space: #02040A;
+  /* Darker, more void-like */
+  --midnight: #0B101B;
+
+  --primary: #7C3AED;
+  --primary-dim: #6D28D9;
+
+  --accent: #14B8A6;
+  --accent-dim: #0D9488;
+
+  --text: #F1F5F9;
+  --text-muted: #64748B;
+
+  --glass-surface: rgba(11, 16, 27, 0.6);
+  --glass-border: rgba(255, 255, 255, 0.06);
+  --glass-shine: rgba(255, 255, 255, 0.02);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+[data-theme="light"] {
+  --deep-space: #F8FAFC;
+  /* Slate 50 */
+  --midnight: #FFFFFF;
+
+  --primary: #6D28D9;
+  /* Darker purple for contrast on white */
+  --primary-dim: #5B21B6;
+
+  --accent: #0D9488;
+  --accent-dim: #0F766E;
+
+  --text: #0F172A;
+  /* Slate 900 */
+  --text-muted: #475569;
+  /* Slate 600 */
+
+  --glass-surface: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.1);
+  --glass-shine: rgba(0, 0, 0, 0.05);
+
+  /* Override glass classes for light mode explicitly if needed, but variables usually handle it */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+@theme {
+  --font-display: var(--font-outfit), system-ui, sans-serif;
+  --font-body: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--deep-space);
+  color: var(--text);
+  overflow-x: hidden;
+  font-family: var(--font-body);
+  font-feature-settings: "cv11", "ss01";
+  /* OpenType features for cleaner text */
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Technical Grid - Subtle, not noisy */
+.spy-grid {
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  mask-image: radial-gradient(circle at center, black 30%, transparent 80%);
+}
+
+/* Glassmorphism - Matte Finish (More Professional) */
+.glass-panel {
+  background: var(--glass-surface);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.2), 0 8px 30px rgba(0, 0, 0, 0.3);
+}
+
+.glass-card {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.4) 100%);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--glass-border);
+  transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.glass-card:hover {
+  background: linear-gradient(180deg, rgba(30, 41, 59, 0.6) 0%, rgba(15, 23, 42, 0.6) 100%);
+  border-color: rgba(124, 58, 237, 0.3);
+  /* Subtle primary hint */
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+/* Inputs - High Contrast & Tactile */
+.spy-input {
+  background: rgba(2, 4, 10, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--text);
+  transition: all 0.15s ease-out;
+  font-feature-settings: "tnum";
+  /* Tabular numbers */
+}
+
+.spy-input:focus {
+  background: rgba(2, 4, 10, 0.9);
+  border-color: var(--primary);
+  box-shadow: 0 0 0 1px var(--primary), 0 0 0 4px rgba(124, 58, 237, 0.1);
+  /* Crisp focus ring */
+  outline: none;
+}
+
+.spy-input::placeholder {
+  color: #475569;
+}
+
+/* Buttons - Refined Glow */
+.btn-primary-glow {
+  background: #7C3AED;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.btn-primary-glow:hover {
+  background: #6D28D9;
+  box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn-primary-glow:active {
+  transform: translateY(0);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #334155;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #475569;
 }
