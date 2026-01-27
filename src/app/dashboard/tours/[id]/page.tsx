@@ -8,7 +8,8 @@ import { demoDB, Tour, Stop } from '@/lib/supabase'
 import { toast } from 'sonner'
 import {
   ArrowLeft, Save, Plus, Trash2, GripVertical, MapPin, 
-  Key, Camera, Navigation, FileText, ChevronDown
+  Key, Camera, Navigation, FileText, ChevronDown,
+  QrCode, Share2, ExternalLink, Copy
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -257,6 +258,47 @@ export default function EditTourPage({ params }: PageProps) {
                     <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full transition-transform peer-checked:translate-x-5" />
                   </div>
                 </label>
+              </div>
+            </div>
+          </section>
+
+          {/* Share Mission Section */}
+          <section className="glass-panel p-6 rounded-xl sticky top-[450px]">
+            <h2 className="text-xs font-bold text-[var(--text-muted)] uppercase tracking-wider mb-5 flex items-center gap-2 border-b border-[var(--border-dim)] pb-2">
+              <Share2 className="w-4 h-4 text-emerald-400" />
+              Recruitment Assets
+            </h2>
+
+            <div className="space-y-4 text-center">
+              <div className="bg-white p-3 rounded-lg inline-block border-4 border-slate-900 shadow-xl mx-auto">
+                 <img 
+                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(`https://mystery-served-admin.vercel.app/play/${id}`)}`}
+                   alt="Mission QR Code"
+                   className="w-32 h-32"
+                 />
+              </div>
+              <p className="text-[10px] text-[var(--text-muted)] leading-tight uppercase font-bold tracking-widest">
+                Scannable Mission Directive <br />
+                Ready for Field Envelopes
+              </p>
+
+              <div className="flex flex-col gap-2 pt-2">
+                 <button 
+                   onClick={() => {
+                     navigator.clipboard.writeText(`https://mystery-served-admin.vercel.app/play/${id}`)
+                     toast.success("Mission Link Copied", { description: "Link ready for field agents." })
+                   }}
+                   className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-[var(--surface-dim)] border border-[var(--border-dim)] text-xs font-bold hover:bg-[var(--surface-hover)] transition-colors"
+                 >
+                    <Copy className="w-3.5 h-3.5" /> Copy Mission Link
+                 </button>
+                 <Link 
+                   href={`/play/${id}`}
+                   target="_blank"
+                   className="flex items-center justify-center gap-2 py-2 px-4 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 text-xs font-bold hover:bg-emerald-500/20 transition-colors"
+                 >
+                    <ExternalLink className="w-3.5 h-3.5" /> Preview as Agent
+                 </Link>
               </div>
             </div>
           </section>

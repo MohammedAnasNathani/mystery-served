@@ -3,11 +3,16 @@ import { createBrowserClient } from '@supabase/ssr'
 
 // For demo purposes, we'll use local storage to simulate a database
 // In production, replace these with your actual Supabase credentials
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://demo.supabase.co'
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'demo-key'
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ''
 
-export const createClient = () => {
-  return createBrowserClient(supabaseUrl, supabaseAnonKey)
+let supabaseClient: any = null
+
+export const getSupabase = () => {
+  if (!supabaseClient) {
+    supabaseClient = createBrowserClient(supabaseUrl, supabaseAnonKey)
+  }
+  return supabaseClient
 }
 
 // Types for our database
@@ -241,12 +246,32 @@ class DemoDatabase {
     }
   }
 
-  // Tour CRUD
+  // Real Supabase methods
+  async isSupabaseConfigured() {
+    return !!supabaseUrl && !!supabaseAnonKey && supabaseUrl !== 'https://demo.supabase.co'
+  }
+
+  // Tour CRUD (Supabase)
   async getTours(): Promise<Tour[]> {
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('tours')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (!error && data) return data
+    }
     return [...this.tours].sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
   }
 
   async getTour(id: string): Promise<Tour | null> {
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('tours')
+        .select('*')
+        .eq('id', id)
+        .single()
+      if (!error && data) return data
+    }
     return this.tours.find(t => t.id === id) || null
   }
 
@@ -257,31 +282,60 @@ class DemoDatabase {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
+
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('tours')
+        .insert(newTour)
+        .select()
+        .single()
+      if (!error && data) return data
+    }
+
     this.tours.push(newTour)
     this.saveToStorage()
     return newTour
   }
 
   async updateTour(id: string, updates: Partial<Tour>): Promise<Tour | null> {
+    const updatedAt = new Date().toISOString()
+
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('tours')
+        .update({ ...updates, updated_at: updatedAt })
+        .eq('id', id)
+        .select()
+        .single()
+      if (!error && data) return data
+    }
+
     const index = this.tours.findIndex(t => t.id === id)
     if (index === -1) return null
-    this.tours[index] = { ...this.tours[index], ...updates, updated_at: new Date().toISOString() }
+    this.tours[index] = { ...this.tours[index], ...updates, updated_at: updatedAt }
     this.saveToStorage()
     return this.tours[index]
   }
 
   async deleteTour(id: string): Promise<boolean> {
+    if (await this.isSupabaseConfigured()) {
+      const { error } = await getSupabase()
+        .from('tours')
+        .delete()
+        .eq('id', id)
+      if (!error) return true
+    }
+
     const index = this.tours.findIndex(t => t.id === id)
     if (index === -1) return false
     this.tours.splice(index, 1)
-    // Also delete associated stops
     this.stops = this.stops.filter(s => s.tour_id !== id)
     this.saveToStorage()
     return true
   }
 
   async duplicateTour(id: string): Promise<Tour | null> {
-    const original = this.tours.find(t => t.id === id)
+    const original = await this.getTour(id)
     if (!original) return null
 
     const newTour = await this.createTour({
@@ -294,7 +348,7 @@ class DemoDatabase {
     })
 
     // Duplicate all stops
-    const originalStops = this.stops.filter(s => s.tour_id === id)
+    const originalStops = await this.getStops(id)
     for (const stop of originalStops) {
       await this.createStop({
         tour_id: newTour.id,
@@ -312,22 +366,28 @@ class DemoDatabase {
         gps_radius: stop.gps_radius,
         image_url: stop.image_url,
         transition_text: stop.transition_text,
-        next_stop_preview: stop.next_stop_preview
+        next_stop_preview: stop.next_stop_preview,
+        auto_show_hint: stop.auto_show_hint,
+        enable_skip: stop.enable_skip
       })
     }
 
     return newTour
   }
 
-  // Stop CRUD
+  // Stop CRUD (Supabase)
   async getStops(tourId: string): Promise<Stop[]> {
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('stops')
+        .select('*')
+        .eq('tour_id', tourId)
+        .order('stop_number', { ascending: true })
+      if (!error && data) return data
+    }
     return this.stops
       .filter(s => s.tour_id === tourId)
       .sort((a, b) => a.stop_number - b.stop_number)
-  }
-
-  async getStop(id: string): Promise<Stop | null> {
-    return this.stops.find(s => s.id === id) || null
   }
 
   async createStop(stop: Omit<Stop, 'id' | 'created_at'>): Promise<Stop> {
@@ -336,12 +396,32 @@ class DemoDatabase {
       id: crypto.randomUUID(),
       created_at: new Date().toISOString()
     }
+
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('stops')
+        .insert(newStop)
+        .select()
+        .single()
+      if (!error && data) return data
+    }
+
     this.stops.push(newStop)
     this.saveToStorage()
     return newStop
   }
 
   async updateStop(id: string, updates: Partial<Stop>): Promise<Stop | null> {
+    if (await this.isSupabaseConfigured()) {
+      const { data, error } = await getSupabase()
+        .from('stops')
+        .update(updates)
+        .eq('id', id)
+        .select()
+        .single()
+      if (!error && data) return data
+    }
+
     const index = this.stops.findIndex(s => s.id === id)
     if (index === -1) return null
     this.stops[index] = { ...this.stops[index], ...updates }
@@ -350,6 +430,14 @@ class DemoDatabase {
   }
 
   async deleteStop(id: string): Promise<boolean> {
+    if (await this.isSupabaseConfigured()) {
+      const { error } = await getSupabase()
+        .from('stops')
+        .delete()
+        .eq('id', id)
+      if (!error) return true
+    }
+
     const index = this.stops.findIndex(s => s.id === id)
     if (index === -1) return false
     this.stops.splice(index, 1)
@@ -358,6 +446,7 @@ class DemoDatabase {
   }
 
   async reorderStops(tourId: string, stopIds: string[]): Promise<void> {
+    // Update local state first
     stopIds.forEach((id, index) => {
       const stop = this.stops.find(s => s.id === id)
       if (stop) {
@@ -365,6 +454,17 @@ class DemoDatabase {
       }
     })
     this.saveToStorage()
+
+    // Sync to Supabase if config available
+    if (await this.isSupabaseConfigured()) {
+      const supabase = getSupabase()
+      for (let i = 0; i < stopIds.length; i++) {
+        await supabase
+          .from('stops')
+          .update({ stop_number: i + 1 })
+          .eq('id', stopIds[i])
+      }
+    }
   }
 
   // Reset to seed data

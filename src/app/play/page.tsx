@@ -11,16 +11,21 @@ export default function PlayerLobby() {
   const [tours, setTours] = useState<Tour[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  const [isConnected, setIsConnected] = useState(false)
+
   useEffect(() => {
     // Determine active tours
     const loadTours = async () => {
-       // In a real app, we'd filter by is_active on the backend
-       // For demo, we get all and filter
        const allTours = await demoDB.getTours()
        setTours(allTours.filter(t => t.is_active))
        setIsLoading(false)
     }
+    const checkConnection = async () => {
+      const configured = await demoDB.isSupabaseConfigured()
+      setIsConnected(configured)
+    }
     loadTours()
+    checkConnection()
   }, [])
 
   if (isLoading) {
@@ -38,30 +43,42 @@ export default function PlayerLobby() {
            <Image src="/logo.png" alt="Mystery Served" fill className="object-contain" />
         </div>
         <h1 className="text-3xl font-bold font-display tracking-tight text-[var(--text)] mb-2">Available Missions</h1>
-        <p className="text-[var(--text-muted)] text-sm mb-6">Select a tour to begin your investigation.</p>
         
-        <button 
-          onClick={async () => {
-             const data = prompt("ENTER SYNC CODE FROM COMPUTER:\n\n1. Find the Sync button (refresh icon) on your computer.\n2. Click it to copy the long code to your clipboard.\n3. Paste that very long code here.\n\n(It is NOT the 1212 pin)")
-             if (data) {
-                if (data.length < 50) {
-                   alert("❌ That code looks too short. Make sure you copy the long code from the Admin Panel!")
-                   return
-                }
-                const success = demoDB.importData(data)
-                if (success) {
-                   alert("✅ Sync Successful! Your tours are now updated.")
-                   window.location.reload()
-                } else {
-                   alert("❌ Invalid Code. Please copy the long text from the computer and try again.")
-                }
-             }
-          }}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 text-xs font-bold hover:bg-[var(--primary)]/20 transition-all"
-        >
-          <RefreshCw className="w-3.5 h-3.5" />
-          Sync from Computer
-        </button>
+        {isConnected ? (
+          <div className="flex items-center justify-center gap-2 mb-6 group">
+            <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span className="text-[10px] font-bold text-emerald-400 uppercase tracking-widest">Live Cloud Sync Active</span>
+            </div>
+          </div>
+        ) : (
+          <p className="text-[var(--text-muted)] text-sm mb-6">Select a tour to begin your investigation.</p>
+        )}
+        
+        {!isConnected && (
+          <button 
+            onClick={async () => {
+               const data = prompt("ENTER SYNC CODE FROM COMPUTER:\n\n1. Find the Sync button on your computer.\n2. Click it to copy the long code.\n3. Paste that very long code here.\n\n(It is NOT the 1212 pin)")
+               if (data) {
+                  if (data.length < 50) {
+                     alert("❌ That code looks too short. Make sure you copy the long code from the Admin Panel!")
+                     return
+                  }
+                  const success = demoDB.importData(data)
+                  if (success) {
+                     alert("✅ Sync Successful! Your tours are now updated.")
+                     window.location.reload()
+                  } else {
+                     alert("❌ Invalid Code. Please copy the long text from the computer and try again.")
+                  }
+               }
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--primary)]/10 text-[var(--primary)] border border-[var(--primary)]/20 text-xs font-bold hover:bg-[var(--primary)]/20 transition-all"
+          >
+            <RefreshCw className="w-3.5 h-3.5" />
+            Sync from Computer
+          </button>
+        )}
       </header>
 
       <div className="flex-1 space-y-4">

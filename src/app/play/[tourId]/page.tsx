@@ -11,6 +11,51 @@ import dynamic from 'next/dynamic'
 // Dynamically import map for the transition view (optional, or just use external link)
 const ReactConfetti = dynamic(() => import('react-confetti'), { ssr: false })
 
+// Sound utility
+const playSound = (type: 'success' | 'failure' | 'click' | 'blip') => {
+  if (typeof window === 'undefined') return
+  const ctx = new (window.AudioContext || (window as any).webkitAudioContext)()
+  const osc = ctx.createOscillator()
+  const gain = ctx.createGain()
+  
+  osc.connect(gain)
+  gain.connect(ctx.destination)
+  
+  const now = ctx.currentTime
+  
+  if (type === 'success') {
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(523.25, now) // C5
+    osc.frequency.exponentialRampToValueAtTime(1046.50, now + 0.1) // C6
+    gain.gain.setValueAtTime(0.1, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3)
+    osc.start(now)
+    osc.stop(now + 0.3)
+  } else if (type === 'failure') {
+    osc.type = 'sawtooth'
+    osc.frequency.setValueAtTime(110, now)
+    osc.frequency.linearRampToValueAtTime(55, now + 0.2)
+    gain.gain.setValueAtTime(0.05, now)
+    gain.gain.linearRampToValueAtTime(0.01, now + 0.2)
+    osc.start(now)
+    osc.stop(now + 0.2)
+  } else if (type === 'click') {
+    osc.type = 'square'
+    osc.frequency.setValueAtTime(1500, now)
+    gain.gain.setValueAtTime(0.05, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05)
+    osc.start(now)
+    osc.stop(now + 0.05)
+  } else if (type === 'blip') {
+    osc.type = 'sine'
+    osc.frequency.setValueAtTime(880, now)
+    gain.gain.setValueAtTime(0.02, now)
+    gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1)
+    osc.start(now)
+    osc.stop(now + 0.1)
+  }
+}
+
 interface PageProps {
   params: Promise<{ tourId: string }>
 }
@@ -32,13 +77,22 @@ export default function PlayTourPage({ params }: PageProps) {
   const [shake, setShake] = useState(0)
   const [showHintModal, setShowHintModal] = useState(false)
 
+  const [showSuccessOverlay, setShowSuccessOverlay] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
+
   // Derived State
   const currentStop = stops[currentStopIndex]
   const isLastStop = (stops.length > 0) && (currentStopIndex === stops.length - 1)
 
   useEffect(() => {
     loadGame()
+    checkConnection()
   }, [])
+
+  const checkConnection = async () => {
+    const configured = await demoDB.isSupabaseConfigured()
+    setIsConnected(configured)
+  }
 
   const loadGame = async () => {
     try {
@@ -92,18 +146,26 @@ export default function PlayTourPage({ params }: PageProps) {
     }
 
     if (isCorrect) {
+      playSound('success')
       handleSuccess()
     } else {
+      playSound('failure')
       handleFailure()
     }
   }
 
   const handleSuccess = () => {
-    if (isLastStop) {
-      setGameState('completed')
-    } else {
-      setGameState('transition')
-    }
+    setShowSuccessOverlay(true)
+    
+    setTimeout(() => {
+      setShowSuccessOverlay(false)
+      if (isLastStop) {
+        setGameState('completed')
+      } else {
+        setGameState('transition')
+      }
+    }, 1500)
+
     toast.success("Correct!", { icon: '🎉' })
     setUserInput('')
     setFailedAttempts(0)
@@ -206,6 +268,8 @@ export default function PlayTourPage({ params }: PageProps) {
     )
   }
 
+  const [agentName, setAgentName] = useState('')
+
   // 4. Completed Screen
   if (gameState === 'completed') {
     return (
@@ -216,14 +280,39 @@ export default function PlayTourPage({ params }: PageProps) {
               <CheckCircle className="w-12 h-12 text-emerald-500 dark:text-emerald-400" />
            </div>
            <h1 className="text-4xl font-bold font-display text-[var(--text)] mb-2">Mission Accomplished!</h1>
-           <p className="text-emerald-600 dark:text-emerald-400 font-medium">Agent Status: LEGENDARY</p>
+           <p className="text-emerald-600 dark:text-emerald-400 font-medium italic tracking-widest uppercase text-xs">Credential Status: LEGENDARY</p>
         </motion.div>
         
-        <div className="bg-[var(--surface-dim)] p-6 rounded-xl border border-[var(--border-dim)] max-w-sm mx-auto w-full relative z-10">
-           <p className="text-[var(--text-muted)]">You have successfully completed <strong>{tour.name}</strong>.</p>
+        <div className="bg-[var(--surface-dim)] p-8 rounded-2xl border border-[var(--border-dim)] max-w-sm mx-auto w-full relative z-10 space-y-6">
+           <p className="text-[var(--text-muted)] text-sm">Sign your name to claim your <strong>Certified Sunshine Agent</strong> credentials.</p>
+           
+           <input 
+             type="text"
+             value={agentName}
+             onChange={(e) => setAgentName(e.target.value)}
+             placeholder="ENTER YOUR NAME"
+             className="w-full bg-black/40 border-b-2 border-[var(--primary)] py-3 text-center text-xl font-bold tracking-widest text-white uppercase focus:outline-none placeholder:text-white/20"
+           />
+
+           {agentName.length > 2 && (
+             <motion.button 
+               initial={{ opacity: 0, y: 10 }}
+               animate={{ opacity: 1, y: 0 }}
+               onClick={() => {
+                 playSound('success')
+                 window.location.href = `/play/${tourId}/certificate?name=${encodeURIComponent(agentName)}&tour=${encodeURIComponent(tour.name)}`
+               }}
+               className="w-full py-4 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-black rounded-xl shadow-lg shadow-orange-900/40 uppercase tracking-tighter italic flex items-center justify-center gap-2 group"
+             >
+               Claim Certification
+               <div className="bg-white/20 p-1 rounded-full group-hover:translate-x-1 transition-transform">
+                 <ArrowRight className="w-4 h-4" />
+               </div>
+             </motion.button>
+           )}
         </div>
 
-        <button onClick={() => router.push('/play')} className="w-full max-w-xs btn-primary-glow bg-[var(--surface-hover)] hover:bg-[var(--surface-dim)] text-[var(--text)] font-bold py-4 rounded-xl transition-all relative z-10 border border-[var(--border-dim)]">
+        <button onClick={() => router.push('/play')} className="w-full max-w-xs py-3 text-[var(--text-muted)] text-xs hover:text-[var(--text)] transition-colors relative z-10">
           Return to HQ
         </button>
       </div>
@@ -237,11 +326,42 @@ export default function PlayTourPage({ params }: PageProps) {
     <div className="flex flex-col h-full bg-[var(--deep-space)]">
        <Toaster position="top-center" theme="system" />
        
+       <AnimatePresence>
+         {showSuccessOverlay && (
+           <motion.div 
+             initial={{ opacity: 0 }} 
+             animate={{ opacity: 1 }} 
+             exit={{ opacity: 0 }}
+             className="fixed inset-0 z-[100] flex items-center justify-center bg-emerald-500/10 backdrop-blur-[2px]"
+           >
+             <motion.div
+               initial={{ scale: 0.5, opacity: 0, y: 20 }}
+               animate={{ scale: 1, opacity: 1, y: 0 }}
+               exit={{ scale: 1.2, opacity: 0 }}
+               className="flex flex-col items-center gap-4"
+             >
+               <div className="w-24 h-24 bg-emerald-500 rounded-full flex items-center justify-center shadow-[0_0_50px_rgba(16,185,129,0.5)]">
+                 <CheckCircle className="w-16 h-16 text-white" />
+               </div>
+               <h2 className="text-3xl font-black text-white italic tracking-tighter uppercase drop-shadow-lg">Verified!</h2>
+             </motion.div>
+           </motion.div>
+         )}
+       </AnimatePresence>
+       
        {/* Header */}
        <div className="flex items-center justify-between p-5 pb-4 border-b border-[var(--border-dim)] bg-[var(--deep-space)]/95 backdrop-blur z-10">
-          <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-muted)]">
-            Stop {currentStop.stop_number} / {stops.length}
-          </span>
+          <div className="flex flex-col">
+            <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--text-muted)]">
+              Stop {currentStop.stop_number} / {stops.length}
+            </span>
+            {isConnected && (
+              <div className="flex items-center gap-1 mt-1">
+                <div className="w-1 h-1 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-[8px] font-bold text-emerald-400 uppercase tracking-widest">Live Sync</span>
+              </div>
+            )}
+          </div>
           <span className="text-[10px] uppercase font-bold tracking-widest text-[var(--primary)] truncate max-w-[150px] text-right">
             {currentStop.name}
           </span>
@@ -302,13 +422,30 @@ export default function PlayTourPage({ params }: PageProps) {
                   <p className="text-lg leading-relaxed text-[var(--text)] font-sans">{currentStop.story_text}</p>
                </div>
 
-               {/* Instructions */}
-               <div className="glass-panel p-5 rounded-xl border border-[var(--primary)]/20 bg-[var(--primary)]/5">
-                  <h3 className="text-xs font-bold text-[var(--primary)] uppercase tracking-widest mb-2 flex items-center gap-2">
-                    <AlertTriangle className="w-3 h-3" /> Mission Directive
+               {/* Instructions - Dossier Style */}
+               <motion.div 
+                 initial={{ rotate: -1, y: 10 }}
+                 animate={{ rotate: 0, y: 0 }}
+                 className="dossier-paper p-8 rounded-sm shadow-2xl relative overflow-hidden"
+               >
+                  {/* Stamp */}
+                  <div className="absolute top-4 right-4 z-10">
+                    <div className="top-secret-stamp text-xs px-2 py-1">Top Secret</div>
+                  </div>
+
+                  <h3 className="typewriter-font text-[10px] uppercase tracking-[0.2em] mb-4 opacity-70 border-b border-black/10 pb-2">
+                    Mission Directive // Ref: {currentStop.id.slice(0,8)}
                   </h3>
-                  <p className="text-[var(--text)] font-medium italic">{currentStop.instructions}</p>
-               </div>
+                  
+                  <div className="space-y-4">
+                    <p className="typewriter-font text-sm leading-relaxed">
+                      {currentStop.instructions}
+                    </p>
+                  </div>
+
+                  {/* Coffee mark decoration */}
+                  <div className="absolute -bottom-10 -left-10 w-32 h-32 border-[8px] border-black/5 rounded-full" />
+               </motion.div>
             </motion.div>
           )}
        </div>
