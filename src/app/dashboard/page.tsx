@@ -58,11 +58,11 @@ export default function DashboardPage() {
       subtext: 'Your tour assets' 
     },
     { 
-      label: 'Real-time Sync', 
-      value: isConnected ? 'Live' : 'Sandbox', 
+      label: 'Database Status', 
+      value: isConnected ? 'Live Cloud' : 'Standalone', 
       icon: TrendingUp, 
       color: isConnected ? 'from-blue-500 to-cyan-500' : 'from-slate-500 to-slate-600',
-      subtext: isConnected ? 'Connected to Cloud' : 'Local Storage Only',
+      subtext: isConnected ? 'Syncing to Supabase' : 'Device Storage Active',
       status: true
     },
     { 
@@ -109,7 +109,7 @@ export default function DashboardPage() {
             ) : (
               <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20">
                 <div className="w-1.5 h-1.5 rounded-full bg-amber-500" />
-                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Sandbox Mode</span>
+                <span className="text-[10px] font-bold text-amber-400 uppercase tracking-widest">Active (Local)</span>
               </div>
             )}
           </div>
