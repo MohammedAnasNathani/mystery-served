@@ -79,6 +79,7 @@ export default function PlayTourPage({ params }: PageProps) {
 
   const [showSuccessOverlay, setShowSuccessOverlay] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
+  const [agentName, setAgentName] = useState('')
 
   // Derived State
   const currentStop = stops[currentStopIndex]
@@ -267,8 +268,6 @@ export default function PlayTourPage({ params }: PageProps) {
       </div>
     )
   }
-
-  const [agentName, setAgentName] = useState('')
 
   // 4. Completed Screen
   if (gameState === 'completed') {

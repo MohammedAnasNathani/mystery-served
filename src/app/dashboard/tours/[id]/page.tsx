@@ -9,7 +9,7 @@ import { toast } from 'sonner'
 import {
   ArrowLeft, Save, Plus, Trash2, GripVertical, MapPin, 
   Key, Camera, Navigation, FileText, ChevronDown,
-  QrCode, Share2, ExternalLink, Copy
+  QrCode, Share2, ExternalLink, Copy, AlertTriangle
 } from 'lucide-react'
 import dynamic from 'next/dynamic'
 
@@ -31,6 +31,7 @@ export default function EditTourPage({ params }: PageProps) {
   const [isSaving, setIsSaving] = useState(false)
   const [expandedStop, setExpandedStop] = useState<string | null>(null)
   const [showNewStopModal, setShowNewStopModal] = useState(false)
+  const [isConnected, setIsConnected] = useState(false)
 
   const [tourForm, setTourForm] = useState({
     name: '',
@@ -42,7 +43,13 @@ export default function EditTourPage({ params }: PageProps) {
 
   useEffect(() => {
     loadTour()
+    checkConnection()
   }, [id])
+
+  const checkConnection = async () => {
+    const configured = await demoDB.isSupabaseConfigured()
+    setIsConnected(configured)
+  }
 
   const loadTour = async () => {
     try {
@@ -299,6 +306,18 @@ export default function EditTourPage({ params }: PageProps) {
                  >
                     <ExternalLink className="w-3.5 h-3.5" /> Preview as Agent
                  </Link>
+                 
+                 {!isConnected && (
+                   <div className="mt-3 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-left">
+                      <p className="text-[10px] font-bold text-amber-500 uppercase tracking-wide mb-1 flex items-center gap-1">
+                        <AlertTriangle className="w-3 h-3" /> Local Storage Mode
+                      </p>
+                      <p className="text-[10px] text-amber-400/80 leading-relaxed">
+                        This tour is saved on <strong>this computer only</strong>. 
+                        To play on mobile using this QR code, please use the <strong>"Sync from Computer"</strong> button in the Player Lobby on your phone.
+                      </p>
+                   </div>
+                 )}
               </div>
             </div>
           </section>
